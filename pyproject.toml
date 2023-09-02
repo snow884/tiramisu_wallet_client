@@ -27,5 +27,5 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/snow884/blue_wallet_client"
-"Bug Tracker" = "https://github.com/snow884/blue_wallet_client/issues"
+"Homepage" = "https://github.com/snow884/tiramisu_wallet_client"
+"Bug Tracker" = "https://github.com/snow884/tiramisu_wallet_client/issues"
