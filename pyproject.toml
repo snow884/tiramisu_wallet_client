@@ -14,7 +14,9 @@ version = "0.0.3"
 authors = [
   { name="Adam Ivansky", email="adam.ivansky@gmail.com" },
 ]
-description = "A client fot Tiramisu wallet allowing you to programatically mint, transfer and trade Taproot Assets. "
+description = """
+A client for Tiramisu wallet allowing you to programatically mint, transfer and trade Taproot Assets Protocol that represents altcoins and NTFs on Bitcoin blackchain. 
+"""
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
