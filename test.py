@@ -1,4 +1,4 @@
-from tiramisu_client import TiramisuClient
+from tiramisu_wallet_client.tiramisu_client import TiramisuClient
 import random
 
 # Please go to https://testnet.tarowallet.net/walletapp/ 
