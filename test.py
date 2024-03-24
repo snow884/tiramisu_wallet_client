@@ -1,4 +1,4 @@
-from tiramisu_client import TiramisuClient
+from tiramisu_wallet_client import TiramisuClient
 import random
 
 # Please go to https://testnet.tarowallet.net/walletapp/ 
@@ -20,6 +20,10 @@ print( client.get_btc_balance() )
 
 print("List assets available")
 assets=client.assets()
+print( assets )
+
+print("List nfts available")
+assets=client.nfts()
 print( assets )
 
 print("Get first asset and print it")

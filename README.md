@@ -95,4 +95,4 @@ print( client.listings_my() )
 
 ## Tiramisu wallet
 
-[Tiramisu wallet](https://testnet.tarowallet.net/walletapp/) is a GUI that allows for simple access to Taproot assets protocol. To see the full documentation for the API visit our [swagger documents](https://testnet.tarowallet.net/walletapp/swagger-ui/).
+[Tiramisu wallet](https://mainnet.tiramisuwallet.com/walletapp/) is a GUI that allows for simple access to Taproot assets protocol. To see the full documentation for the API visit our [swagger documents](https://testnet.tarowallet.net/walletapp/swagger-ui/).
