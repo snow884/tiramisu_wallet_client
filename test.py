@@ -6,6 +6,8 @@ import random
 USER_NAME="FILL_THIS_OUT"
 PASSWORD="FILL_THIS_OUT"
 
+TiramisuClient.google_login(None)
+
 print("Create client object")
 client = TiramisuClient(username=USER_NAME,password=PASSWORD)
 

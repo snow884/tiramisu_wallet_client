@@ -1,6 +1,9 @@
 
 import requests
 import time 
+import socket
+import sys
+import urllib.parse
 
 class TiramisuClient():
     
@@ -30,7 +33,7 @@ class TiramisuClient():
 
         assets_dict = {curr["acronym"]:curr for curr in assets["results"]} 
         self.btc_asset_id = assets_dict["SAT"]["id"]
-
+        
     def register_user(self):
         """
         Register a new user
@@ -235,6 +238,15 @@ class TiramisuClient():
         
         return res.json()
     
+    def notifications(self):
+        url = f"api/notifications/"
+    
+        res = requests.get(self.base_url + url, headers=self.headers)
+        
+        self.raise_with_text(res)
+        
+        return res.json()
+    
     def transactions_send_taproot_asset(self, invoice_outbound):
         url = "api/transactions/send_taro/"
 
@@ -254,7 +266,7 @@ class TiramisuClient():
         return res.json()
 
     def transactions_send_btc_lnd(self, invoice_outbound:str):
-        url = "api/transactions/send_btc_lns/"
+        url = "api/transactions/send_btc_lnd/"
         
         res = requests.post(self.base_url + url,data={"invoice_outbound":invoice_outbound}, headers=self.headers)
         
@@ -344,6 +356,17 @@ class TiramisuClient():
         
         return (transaction_receive)
 
+    def transactions_receive_btc_lnd(self, amount:int, description: str):
+        url = "api/transactions/receive_btc_lnd/"
+        
+        res = requests.post(self.base_url + url,data={"amount":amount,"description":description}, headers=self.headers)
+
+        self.raise_with_text(res)
+        
+        return res.json()
+
+
+
     def transactions(self, offset=0, limit=100):
         url = "api/transactions/"
         
@@ -430,8 +453,15 @@ class TiramisuClient():
 
     def sell_taproot_asset_wait_finished(self, asset:int):
         
-        transaction_receive = self.sell_taproot_asset_asset(asset)
+        transaction_receive = self.sell_taproot_asset(asset)
         transaction_receive = self.transactions_wait_status(transaction_id=transaction_receive["id"], status_wait_for='exchange_finished')
         return transaction_receive
 
-        "api/currencies/<int:pk>",
+    def get_info(self):
+        url = "api/get_info/"
+
+        res = requests.get(self.base_url + url, headers=self.headers)
+        
+        self.raise_with_text(res)
+        
+        return res.json()
