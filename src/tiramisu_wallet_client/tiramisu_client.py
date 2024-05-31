@@ -29,10 +29,9 @@ class TiramisuClient():
         
         self.headers = {'Authorization':f'Token {self.auth_token}'}
     
-        assets = self.assets(limit=2000)
-
-        assets_dict = {curr["acronym"]:curr for curr in assets["results"]} 
-        self.btc_asset_id = assets_dict["SAT"]["id"]
+        assets = self.assets(limit=10,name="Bitcoin")
+        
+        self.btc_asset_id = assets["results"][0]["id"]
         
     def register_user(self):
         """
@@ -68,10 +67,12 @@ class TiramisuClient():
 
         
     def raise_with_text(self, res:dict):
-        
+        print(res.url)
         try: 
             res.raise_for_status()
         except Exception as e:
+            # with open("error.txt",'w') as f:
+            #     f.write(res.text)
             raise Exception(res.text) from e
     
     def balance_create(self, asset: str):
@@ -96,7 +97,7 @@ class TiramisuClient():
         
         balances = self.balances()
         
-        balances_dict = {bal["currency"]: bal for bal in balances["results"]}
+        balances_dict = {bal["currency"]["id"]: bal for bal in balances["results"]}
         
         return balances_dict[self.btc_asset_id]
         
@@ -201,19 +202,33 @@ class TiramisuClient():
         
         return minting_transaction
 
-    def assets(self, offset=0, limit=100):
+    def assets(self, offset=0, limit=100, name=None):
+        
         url = "api/currencies/"
-    
-        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
+        params = {"limit":limit, "offset":offset}
+        
+        if name:
+            params["name"]=name
+            
+        res = requests.get(self.base_url + url, headers=self.headers, params = params)
         
         self.raise_with_text(res)
         
         return res.json()
 
-    def nfts(self, offset=0, limit=100):
+    def nfts(self, offset=0, limit=100, name=None, collection_name=None):
         url = "api/nfts/"
-    
-        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
+        
+        params = {"limit":limit, "offset":offset}
+        
+        if collection_name:
+            params[f"collection__name"]=collection_name
+
+        if name:
+            params[f"name"]=name
+
+
+        res = requests.get(self.base_url + url, headers=self.headers, params = params)
         
         self.raise_with_text(res)
         
@@ -229,8 +244,17 @@ class TiramisuClient():
         return res.json()
     
 
-    def collections(self):
+    def collections(self, offset=0, limit=100):
         url = f"api/collections/"
+    
+        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
+        
+        self.raise_with_text(res)
+        
+        return res.json()
+    
+    def collection(self, id):
+        url = f"api/collection/{id}"
     
         res = requests.get(self.base_url + url, headers=self.headers)
         
@@ -238,10 +262,10 @@ class TiramisuClient():
         
         return res.json()
     
-    def notifications(self):
+    def notifications(self, offset=0, limit=100):
         url = f"api/notifications/"
     
-        res = requests.get(self.base_url + url, headers=self.headers)
+        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
         
         self.raise_with_text(res)
         
@@ -367,10 +391,23 @@ class TiramisuClient():
 
 
 
-    def transactions(self, offset=0, limit=100):
+    def transactions(self, offset=0, limit=100, destination_username=None, description=None, currency_id=None):
         url = "api/transactions/"
         
-        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
+        params = {"limit":limit, "offset":offset}
+        
+        search = []
+        
+        if destination_username:
+            params["destination_user__username"] = destination_username
+            
+        if description:
+            params["description"] = description
+        
+        if currency_id:
+            params["currency_id"] = currency_id
+            
+        res = requests.get(self.base_url + url, headers=self.headers, params = params)
         
         self.raise_with_text(res)
         
@@ -403,10 +440,10 @@ class TiramisuClient():
         
         return res.json()
         
-    def listings_my(self):
+    def listings_my(self, offset=0, limit=100):
         url = "api/listings_my/"
         
-        res = requests.get(self.base_url + url, headers=self.headers)
+        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
         
         self.raise_with_text(res)
         
@@ -436,9 +473,9 @@ class TiramisuClient():
         
         return res.json()
     
-    def buy_nft_asset_wait_finished(self, asset:int, amount:int):
+    def buy_nft_asset_wait_finished(self, asset:int):
         
-        transaction_receive = self.buy_nft_asset(asset, amount)
+        transaction_receive = self.buy_nft_asset(asset)
         transaction_receive = self.transactions_wait_status(transaction_id=transaction_receive["id"], status_wait_for='exchange_finished')
         return transaction_receive
     
