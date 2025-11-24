@@ -10,7 +10,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tiramisu-wallet-client"
-version = "0.0.6"
+version = "0.0.9"
 authors = [
   { name="Adam Ivansky", email="adam.ivansky@gmail.com" },
 ]

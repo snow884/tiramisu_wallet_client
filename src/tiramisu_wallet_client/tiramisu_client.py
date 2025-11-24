@@ -113,6 +113,18 @@ class TiramisuClient():
         
         return res.json()
         
+    def balances_rgb(self, offset=0, limit=100):
+        """
+        List all asset RGB balances in the current user account
+        """
+        url = "api/balances-rgb/"
+        
+        res = requests.get(self.base_url + url, headers=self.headers, params = {"limit":limit, "offset":offset})
+        
+        self.raise_with_text(res)
+        
+        return res.json()
+        
     def balances_nft(self, offset=0, limit=100):
         """
         List all NFT balances in the current user account
@@ -502,3 +514,13 @@ class TiramisuClient():
         self.raise_with_text(res)
         
         return res.json()
+    
+    def get_user_id(username):
+        res = requests.get(f'https://mainnet.tiramisuwallet.com/walletapp/ajax_select/ajax_lookup/users?term={username}')
+        user_id_list = (res.json())
+        
+        for user_key in user_id_list:
+            if user_key['value']==username:
+                return int(user_key['pk'])
+        
+        return None
